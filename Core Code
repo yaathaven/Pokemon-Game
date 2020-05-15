@@ -1,0 +1,119 @@
+class Pokemon:
+  def __init__(self,name,level,exp,maxexp,Ptype,maxhealth,currenthealth,knocked=False):
+    self.name=name
+    self.level=level
+    self.exp=exp
+    self.maxexp=maxexp
+    self.Ptype=Ptype
+    self.maxhealth=maxhealth
+    self.currenthealth=currenthealth
+    self.knocked=knocked
+
+  def lose_health(self,damage):
+    self.currenthealth=self.currenthealth-damage
+    return '{} took {} damage and now has {} of health'.format(self.name,damage,self.currenthealth)
+
+  def gain_health(self,recover):
+    self.currenthealth+=recover
+    if self.currenthealth>self.maxhealth:
+      self.currenthealth=self.maxhealth
+      return '{} healed fully'.format(self.name)
+    return '{} healed {} of health and now has {} of health'.format(self.name,recover,self.currenthealth)
+
+  def knock_out(self):
+    if self.currenthealth==0:
+      self.knocked==True
+      return "{} is knocked out".format(self.name)
+    else:
+      return "{} is not knocked out".format(self.name)
+  
+  def revive(self):
+    if knocked==True:
+      knocked==False
+      return " {} is revived".format(self.name)
+
+  def attack(self,other_pokemon,damage):
+    if self.Ptype=='Fire' and other_pokemon.Ptype=='Grass':
+      newdamage=damage*2
+      print("The damage has doubled!!")
+      return newdamage
+    if self.Ptype=='Grass' and other_pokemon.Ptype=='Fire':
+      newdamage= damage*0.5
+      print("Oh No!The damage has is cut in half!")
+      return newdamage
+    if self.Ptype=='Fire' and other_pokemon.Ptype=='Water':
+      newdamage= damage*0.5
+      print("Oh No!The damage has is cut in half!")
+      return newdamage
+    if self.Ptype=='Water' and other_pokemon.Ptype=='Fire':
+      newdamage=damage*2
+      print("The damage has doubled!!")
+      return newdamage
+    if self.Ptype=='Grass'and other_pokemon.Ptype=='Water':
+      newdamage=damage*2
+      print("The damage has doubled!!")
+      return newdamage
+    if self.Ptype=='Water' and other_pokemon.Ptype=='Grass':
+      newdamage= damage*0.5
+      print("Oh No!The damage has is cut in half!")
+      return newdamage
+
+  def experience(self,gain):
+    self.exp+=gain
+    if self.exp>self.maxexp:
+      self.level+=1
+      self.exp=0
+      self.maxexp+=self.maxexp*0.2
+      print('{} leveled up!!'.format(self.name))
+      return self.level
+    print('{} now has gained {} of experience'.format(self.name,gain))
+    return self.exp
+
+class Charmander(Pokemon):
+  def __init__(self,name,level,exp,maxexp,Ptype,maxhealth,currenthealth,moves=[],knocked=False):
+    super().__init__(name,level,exp,maxexp,Ptype,maxhealth,currenthealth,knocked=False)
+    self.moves=['Flamethrower','Firewheel','Tackle']
+  def experience(self,gain):
+    super().experience(gain)
+    if self.level>=33 and self.level<35:
+      print('Horray Charamander envloved!')
+      self.name='Charmeleon'
+      return self.name
+    elif self.level>=35:
+      print('Horray Charmeleon envloved!')
+      self.name='Charzard'
+      return self.name
+
+class Trainer:
+  def __init__(self,name,numofpotions,pokemons,currentpokemon):
+    self.name=name
+    self.numofpotions=numofpotions
+    self.pokemons=pokemons
+    self.currentpokemon=currentpokemon
+  
+  def heal_w_potion(self,recover):
+    pokemon=self.pokemons[self.currentpokemon]
+    while pokemon.currenthealth<pokemon.maxhealth:
+     Pokemon.gain_health(pokemon,recover)
+     self.numofpotions+=-1
+     return "We use a potion to recover {} health".format(pokemon.name)
+
+  def attack_other_trainer(self,other_trainer,damage):
+    otheractive=other_trainer.pokemons[other_trainer.currentpokemon]
+    myactive=self.pokemons[self.currentpokemon]
+    if myactive.knocked==True:
+      return '{} can\'t battle cause its knocked out'.format(myactive.name)
+    finaldamage=Pokemon.attack(myactive,otheractive,damage)
+    otheractive.currenthealth+=-finaldamage
+    return "{} Pokemon received {} amount of damage".format(otheractive.name,finaldamage)
+
+  def switch(self,num):
+    pokemon=self.pokemons[num]
+    if pokemon.knocked==True:
+      return "Can\'t switch with a knocked out Pokemon"
+    self.currentpokemon=num
+    return "We switched into {}".format(pokemon.name)
+
+
+
+
